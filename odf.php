@@ -77,6 +77,11 @@ class Odf
         copy($filename, $tmp);
         $this->tmpfile = $tmp;
         $this->_moveRowSegments();
+
+		preg_match("@<office:text[^>]*>@", $this->contentXml, $matches, PREG_OFFSET_CAPTURE);
+		$beginningOfTheBody = strlen($matches[0][0]) + $matches[0][1];
+		$endOfTheBody = strpos($this->contentXml, '</office:text>');
+		$this->newPageToAdd = substr($this->contentXml, $beginningOfTheBody, $endOfTheBody - $beginningOfTheBody);
     }
     /**
      * Assing a template variable
@@ -338,6 +343,23 @@ IMG;
         	unlink($this->tmpfile);
         }
     }
+
+	public function addNewPage() {
+		// add the pagebreak style to the header of the odt file if not already present
+		if (strpos($this->contentXml, 'style:name="pagebreak_odtphp"') === false) {
+			$pagebreakStyle = '<style:style style:name="pagebreak_odtphp" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:break-after="page"/><style:text-properties fo:font-size="2pt"/></style:style>';
+			if (strpos($this->contentXml, '</office:automatic-styles>') === false) {
+				$this->contentXml = str_replace('<office:body', '<office:automatic-styles></office:automatic-styles><office:body', $this->contentXml);
+			}
+			$this->contentXml = str_replace('</office:automatic-styles>', $pagebreakStyle . '</office:automatic-styles>', $this->contentXml);
+		}
+
+		$this->_parse();   //write the changes to all the pages so far
+		//add linebreak and new page
+		$this->contentXml = str_replace("</office:text>", '<text:p text:style-name="pagebreak_odtphp"> </text:p>' . $this->newPageToAdd . "</office:text>", $this->contentXml);
+
+		$this->segments = array();   //clear segments of the previous pages
+	}
 }
 
 ?>
