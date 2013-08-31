@@ -72,7 +72,7 @@ class Odf
  			}
 
         $this->file->close();
-        
+
         $tmp = tempnam($this->config['PATH_TO_TMP'], md5(uniqid()));
         copy($filename, $tmp);
         $this->tmpfile = $tmp;
@@ -87,7 +87,7 @@ class Odf
      * @throws OdfException
      * @return odf
      */
-    public function setVars($key, $value, $encode = true, $charset = 'ISO-8859')
+    public function setVars($key, $value, $encode = true, $charset = 'UTF-8')
     {
          $tag= $this->config['DELIMITER_LEFT'] . $key . $this->config['DELIMITER_RIGHT'];
 		if (strpos($this->contentXml, $tag) === false && strpos($this->stylesXml , $tag) === false) {
@@ -130,7 +130,7 @@ IMG;
      * Called automatically within the constructor
      *
      * @return void
-     */    
+     */
     private function _moveRowSegments()
     {
     	// Search all possible rows in the document
@@ -186,7 +186,7 @@ IMG;
     }
     /**
      * Display all the current template variables
-     * 
+     *
      * @return string
      */
     public function printVars()
@@ -205,7 +205,7 @@ IMG;
     }
     /**
      * Display loop segments declared with setSegment()
-     * 
+     *
      * @return string
      */
     public function printDeclaredSegments()
@@ -234,7 +234,7 @@ IMG;
     }
     /**
      * Save the odt file on the disk
-     * 
+     *
      * @param string $file name of the desired file
      * @throws OdfException
      * @return void
@@ -246,7 +246,7 @@ IMG;
             	throw new OdfException('Permission denied : can\'t create ' . $file);
         	}
             $this->_save();
-            copy($this->tmpfile, $file);     
+            copy($this->tmpfile, $file);
         } else {
             $this->_save();
         }
@@ -299,19 +299,19 @@ IMG;
         if (headers_sent($filename, $linenum)) {
             throw new OdfException("headers already sent ($filename at $linenum)");
         }
-        
+
         if( $name == "" )
         {
         		$name = md5(uniqid()) . ".odt";
         }
-        
+
         header('Content-type: application/vnd.oasis.opendocument.text');
         header('Content-Disposition: attachment; filename="'.$name.'"');
         readfile($this->tmpfile);
     }
     /**
-     * Returns a variable of configuration 
-     * 
+     * Returns a variable of configuration
+     *
      * @return string The requested variable of configuration
      */
     public function getConfig($configKey)
@@ -323,7 +323,7 @@ IMG;
     }
     /**
      * Returns the temporary working file
-     * 
+     *
      * @return string le chemin vers le fichier temporaire de travail
      */
     public function getTmpfile()
@@ -332,7 +332,7 @@ IMG;
     }
     /**
      * Delete the temporary file when the object is destroyed
-     */    
+     */
     public function __destruct() {
           if (file_exists($this->tmpfile)) {
         	unlink($this->tmpfile);
