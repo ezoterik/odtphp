@@ -1,0 +1,24 @@
+{
+	"name": "ezoterik/odtphp",
+	"description": "OdtPHP is a PHP librairy designed to use OpenDocument file as a template for PHP. It's a kind of PHPLib for OpenOffice document.",
+	"keywords": ["odt", "php", "openoffice"],
+	"homepage": "https://github.com/ezoterik/odtphp",
+	"license": "GPL-2.0+",
+	"authors": [
+		{
+			"name": "cyruss",
+			"homepage": "http://cyruss.users.sourceforge.net"
+		},
+		{
+			"name": "cyruss666",
+			"homepage": "http://cyruss666.users.sourceforge.net"
+		},
+		{
+			"name": "doctorrock",
+			"homepage": "http://doctorrock.users.sourceforge.net"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0"
+	}
+}
