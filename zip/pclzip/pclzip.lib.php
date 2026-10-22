@@ -4364,7 +4364,6 @@
     // ----- Creates a temporary file
     $v_gzip_temp_name = PCLZIP_TEMPORARY_DIR.uniqid('pclzip-').'.gz';
     if (($v_dest_file = @fopen($v_gzip_temp_name, "wb")) == 0) {
-      fclose($v_file);
       PclZip::privErrorLog(PCLZIP_ERR_WRITE_OPEN_FAIL, 'Unable to open temporary file \''.$v_gzip_temp_name.'\' in binary write mode');
       //--(MAGIC-PclTrace)--//PclTraceFctEnd(__FILE__, __LINE__, PclZip::errorCode(), PclZip::errorInfo());
       return PclZip::errorCode();
@@ -5031,7 +5030,8 @@
         $v_byte = @fread($this->zip_fd, 1);
 
         // -----  Add the byte
-        $v_bytes = ($v_bytes << 8) | Ord($v_byte);
+        // Keep a four-byte window on both 32-bit and 64-bit PHP integers.
+        $v_bytes = (($v_bytes & 0xFFFFFF) << 8) | Ord($v_byte);
 
         // ----- Compare the bytes
         if ($v_bytes == 0x504b0506)

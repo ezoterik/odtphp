@@ -99,8 +99,17 @@ class Odf
 		if (strpos($this->contentXml, $tag) === false && strpos($this->stylesXml , $tag) === false) {
  				throw new OdfException("var $key not found in the document");
  			}
-        $value = $encode ? htmlspecialchars($value) : $value;
-        $value = ($charset == 'ISO-8859') ? utf8_encode($value) : $value;
+        if ($charset == 'ISO-8859') {
+            // Convert Latin-1 before XML escaping; preserve each PHP version's default escaping flags.
+            $value = iconv('ISO-8859-1', 'UTF-8', $value);
+            if ($value === false) {
+                throw new OdfException('Unable to convert ISO-8859-1 value to UTF-8');
+            }
+            $flags = (PHP_VERSION_ID >= 80100) ? ENT_QUOTES | ENT_SUBSTITUTE : ENT_COMPAT;
+            $value = $encode ? htmlspecialchars($value, $flags, 'UTF-8') : $value;
+        } else {
+            $value = $encode ? htmlspecialchars($value) : $value;
+        }
         $this->vars[$tag] = str_replace("\n", "<text:line-break/>", $value);
         return $this;
     }
