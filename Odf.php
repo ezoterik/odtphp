@@ -91,7 +91,7 @@ class Odf
      * @param string $value replacement value
      * @param bool $encode if true, special XML characters are encoded
      * @throws OdfException
-     * @return odf
+     * @return Odf
      */
     public function setVars($key, $value, $encode = true, $charset = 'UTF-8')
     {
@@ -110,7 +110,7 @@ class Odf
      * @param string $key name of the variable within the template
      * @param string $value path to the picture
      * @throws OdfException
-     * @return odf
+     * @return Odf
      */
     public function setImage($key, $value)
     {
@@ -175,7 +175,7 @@ IMG;
      *
      * @param Segment $segment
      * @throws OdfException
-     * @return odf
+     * @return Odf
      */
     public function mergeSegment(Segment $segment)
     {
@@ -241,7 +241,7 @@ IMG;
     /**
      * Save the odt file on the disk
      *
-     * @param string $file name of the desired file
+     * @param mixed $file destination filename; other values only save the working file
      * @throws OdfException
      * @return void
      */
@@ -318,7 +318,7 @@ IMG;
     /**
      * Returns a variable of configuration
      *
-     * @return string The requested variable of configuration
+     * @return mixed The configured value, or false when the key does not exist
      */
     public function getConfig($configKey)
     {
