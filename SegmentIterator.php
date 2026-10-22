@@ -1,7 +1,7 @@
 <?php
 /**
  * Segments iterator
- * You need PHP 5.2 at least
+ * You need PHP 7.1 at least
  * You need Zip Extension or PclZip library
  * Encoding : ISO-8859-1
  * Last commit by $Author: neveldo $
@@ -17,37 +17,44 @@ class SegmentIterator implements RecursiveIterator
 {
     private $ref;
     private $key;
+    private $keys;
+    /**
+     * @param Segment[] $ref
+     */
     public function __construct(array $ref)
     {
         $this->ref = $ref;
         $this->key = 0;
         $this->keys = array_keys($this->ref);
     }
-    public function hasChildren()
+    public function hasChildren(): bool
     {
-        return $this->valid() && $this->current() instanceof Segment;
+        return $this->valid();
     }
-    public function current()
+    public function current(): Segment
     {
         return $this->ref[$this->keys[$this->key]];
     }
-    function getChildren()
+    public function getChildren(): RecursiveIterator
     {
-        return new self($this->current()->children);
+        // Use the public iterator because the segment's children are protected.
+        /** @var SegmentIterator $iterator */
+        $iterator = $this->current()->getIterator()->getInnerIterator();
+        return $iterator;
     }
-    public function key()
+    public function key(): int
     {
         return $this->key;
     }
-    public function valid()
+    public function valid(): bool
     {
         return array_key_exists($this->key, $this->keys);
     }
-    public function rewind()
+    public function rewind(): void
     {
         $this->key = 0;
     }
-    public function next()
+    public function next(): void
     {
         $this->key ++;
     }

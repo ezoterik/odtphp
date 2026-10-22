@@ -4,7 +4,7 @@ class SegmentException extends Exception
 {}
 /**
  * Class for handling templating segments with odt files
- * You need PHP 5.2 at least
+ * You need PHP 7.1 at least
  * You need Zip Extension or PclZip library
  * Encoding : ISO-8859-1
  * Author: neveldo $
@@ -59,23 +59,23 @@ class Segment implements IteratorAggregate, Countable
      */
     public function hasChildren()
     {
-        return $this->getIterator()->hasChildren();
+        return (!empty($this->children));
     }
     /**
      * Countable interface
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->children);
     }
     /**
      * IteratorAggregate interface
      *
-     * @return Iterator
+     * @return RecursiveIteratorIterator
      */
-    public function getIterator()
+    public function getIterator(): RecursiveIteratorIterator
     {
         return new RecursiveIteratorIterator(new SegmentIterator($this->children), 1);
     }

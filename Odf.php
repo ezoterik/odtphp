@@ -6,7 +6,7 @@ class OdfException extends Exception
 {}
 /**
  * Templating class for odt file
- * You need PHP 5.2 at least
+ * You need PHP 7.1 at least
  * You need Zip Extension or PclZip library
  * Encoding : ISO-8859-1
  * Author: neveldo $
@@ -32,6 +32,7 @@ class Odf
     protected $manifestXml;		// To store content of manifest.xml file
     protected $stylesXml;       // To store content of styles.xml file
     protected $tmpfile;
+    protected $newPageToAdd;
     protected $images = array();
     protected $vars = array();
     protected $manif_vars = array(); // array to store image names
@@ -73,7 +74,7 @@ class Odf
 
         $this->file->close();
 
-        $tmp = tempnam($this->config['PATH_TO_TMP'], md5(uniqid()));
+        $tmp = tempnam($this->config['PATH_TO_TMP'] ?? sys_get_temp_dir(), md5(uniqid()));
         copy($filename, $tmp);
         $this->tmpfile = $tmp;
         $this->_moveRowSegments();
